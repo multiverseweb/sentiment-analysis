@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="website/styles/style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <p class="heading">Sentiment Analysis</p>
+    <div class="container">
+        <div class="contents">
+            <p class="subheading">Steps:</p>
+            <p class="text">i.&nbsp;&nbsp;&nbsp;Enter the comment you want to analyse the sentiment
+                of.<br>ii.&nbsp;&nbsp;Choose a ML model from the dropdown.<br>iii.&nbsp;Click on 'Submit' to view
+                result.
+            </p>
+            <form id="sentiment-form">
+                <input type="text" name="comment" id="comment" placeholder="Enter your comment here">
+                <select>
+                    <option value="" disabled selected>Select model</option>
+                    <option value="svm">SVM</option>
+                    <option value="logistic_regression">Logistic Regression</option>
+                    <option value="naive_bayes">Naive Bayes</option>
+                </select>
+                <button type="submit" onclick="analyzeSentiment()">Submit</button>
+            </form>
+        </div>
+        <div class="results">
+            <p id="result">hello!</p>
+        </div>
+    </div>
+    <footer>
+        <p>Licensed under the terms of MIT License.<br>&copy; 2025 Tanishka Saxena. All Rights Reserved.</p>
+    </footer>
+    <script src="website/scripts/script.js"></script>
+</body>
+
+</html>

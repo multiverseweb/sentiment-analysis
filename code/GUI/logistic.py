@@ -12,7 +12,7 @@ def load_data(train_path, test_path):
     return train_data, test_data
 
 def visualize_training(train_data):
-    # Visualize the distribution of sentiments in the training dataset
+    
     plt.figure(figsize=(8, 6))
     sns.countplot(data=train_data, x='label')
     plt.title('Distribution of Sentiments in Training Data')
@@ -20,10 +20,9 @@ def visualize_training(train_data):
     plt.ylabel('Count')
     plt.show()
 
-def extract_features(train_data,test_data):
-    # Extract features and labels from the training dataset
-    X_train_raw = train_data['tweet']  # Tweets
-    y_train = train_data['label']    # Sentiment labels
+def extract_features(train_data, test_data):
+    X_train_raw = train_data['tweet']  
+    y_train = train_data['label']    
     X_test_raw = test_data['tweet']
     return X_train_raw, y_train, X_test_raw
 
@@ -38,10 +37,13 @@ def train(X_train, y_train):
     svm_model.fit(X_train, y_train)
     return svm_model
 
-def predict(svm_model,X_test):
+def predict(svm_model, X_test):
     y_pred = svm_model.predict(X_test)
-    test_data.to_csv('svm_output.csv', index=False)
-    messagebox.showinfo("Prediction saved to svm_output.csv.")
+    test_data['Predicted_Label'] = y_pred
+    test_data.to_csv('logistic_output.csv', index=False)
+    root = tk.Tk()
+    root.withdraw()  
+    messagebox.showinfo("Notification", "Predictions saved to 'logistic_output.csv'.")
     return y_pred
 
 def visualize_predictions(y_pred):  
@@ -53,24 +55,26 @@ def visualize_predictions(y_pred):
     plt.show()
 
 train_data, test_data = load_data('dataset/train.csv', 'dataset/test.csv')
+
 print("Train Data Info:")
 print(train_data.info())
 print("\nTest Data Info:")
 print(test_data.info())
 
-
 X_train_raw, y_train, X_test_raw = extract_features(train_data, test_data)
-print("X_train_raw:\n",X_train_raw)
-print("y_tarin:\n",y_train)
-print("x_test_raw:\n",X_test_raw)
 
-X_train,X_test=preprocess(X_train_raw, X_test_raw)
+print("X_train_raw:\n", X_train_raw.head())
+print("y_train:\n", y_train.head())
+print("X_test_raw:\n", X_test_raw.head())
+
+X_train, X_test = preprocess(X_train_raw, X_test_raw)
 print("Preprocessing Done.")
 
-svm_model=train(X_train, y_train)
+svm_model = train(X_train, y_train)
+print("Model training complete.")
 
-y_pred=predict(svm_model,X_test)
+y_pred = predict(svm_model, X_test)
+print("Prediction complete.")
 
 visualize_training(train_data)
-
 visualize_predictions(y_pred)

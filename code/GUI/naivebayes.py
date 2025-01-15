@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.svm import SVC
+from sklearn.naive_bayes import MultinomialNB
 import tkinter as tk
 from tkinter import messagebox
 
@@ -12,18 +12,16 @@ def load_data(train_path, test_path):
     return train_data, test_data
 
 def visualize_training(train_data):
-    # Visualize the distribution of sentiments in the training dataset
     plt.figure(figsize=(8, 6))
-    sns.countplot(data=train_data, x='label')
+    sns.countplot(data=train_data, x='label', palette='viridis')
     plt.title('Distribution of Sentiments in Training Data')
     plt.xlabel('Sentiment')
     plt.ylabel('Count')
     plt.show()
 
-def extract_features(train_data,test_data):
-    # Extract features and labels from the training dataset
-    X_train_raw = train_data['tweet']  # Tweets
-    y_train = train_data['label']    # Sentiment labels
+def extract_features(train_data, test_data):
+    X_train_raw = train_data['tweet']
+    y_train = train_data['label']
     X_test_raw = test_data['tweet']
     return X_train_raw, y_train, X_test_raw
 
@@ -34,43 +32,40 @@ def preprocess(X_train_raw, X_test_raw):
     return X_train, X_test
 
 def train(X_train, y_train):
-    svm_model = SVC(kernel='linear', random_state=42)
-    svm_model.fit(X_train, y_train)
-    return svm_model
+    nb_model = MultinomialNB()
+    nb_model.fit(X_train, y_train)
+    return nb_model
 
-def predict(svm_model,X_test):
-    y_pred = svm_model.predict(X_test)
-    test_data.to_csv('svm_output.csv', index=False)
-    messagebox.showinfo("Prediction saved to svm_output.csv.")
+def predict(nb_model, X_test):
+    y_pred = nb_model.predict(X_test)
+    test_data['Predicted_Label'] = y_pred
+    test_data.to_csv('naivebayes_output.csv', index=False)
+    root = tk.Tk()
+    root.withdraw()
+    messagebox.showinfo("Notification", "Predictions saved to 'naivebayes_output.csv'.")
     return y_pred
 
-def visualize_predictions(y_pred):  
+def visualize_predictions(y_pred):
     plt.figure(figsize=(8, 6))
     sns.countplot(x=y_pred, palette='cool')
-    plt.title('Distribution of Predicted Sentiments')
+    plt.title('Distribution of Predicted Sentiments (Naive Bayes)')
     plt.xlabel('Sentiment')
     plt.ylabel('Count')
     plt.show()
 
-train_data, test_data = load_data('dataset/train.csv', 'dataset/test.csv')
+train_data, test_data = load_data('../../dataset/train.csv', '../../dataset/test.csv')
+
 print("Train Data Info:")
 print(train_data.info())
 print("\nTest Data Info:")
 print(test_data.info())
 
+visualize_training(train_data)
 
 X_train_raw, y_train, X_test_raw = extract_features(train_data, test_data)
-print("X_train_raw:\n",X_train_raw)
-print("y_tarin:\n",y_train)
-print("x_test_raw:\n",X_test_raw)
+X_train, X_test = preprocess(X_train_raw, X_test_raw)
 
-X_train,X_test=preprocess(X_train_raw, X_test_raw)
-print("Preprocessing Done.")
-
-svm_model=train(X_train, y_train)
-
-y_pred=predict(svm_model,X_test)
-
-visualize_training(train_data)
+nb_model = train(X_train, y_train)
+y_pred = predict(nb_model, X_test)
 
 visualize_predictions(y_pred)
