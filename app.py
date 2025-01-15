@@ -65,8 +65,9 @@ body{
 }
 .results{
     background-color: rgb(55, 55, 55);
-    height: 70vh;
+    height: 30vh;
     width: 40%;
+    padding:20px;
 }
 form{
     display: flex;
@@ -134,7 +135,7 @@ footer{
     }
     .results{
         margin-top: 20px;
-        width:calc(100vw - 70px);
+        width:calc(100vw - 110px);
         margin-bottom: 100px;
     }
     .contents{
