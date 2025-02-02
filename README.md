@@ -1,4 +1,4 @@
-## Twitter Sentiment Analysis
+## Sentiment Analysis
 
 ### Models Used
 
